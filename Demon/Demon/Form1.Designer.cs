@@ -2,6 +2,11 @@
 {
     partial class Form1
     {
+        string[] rules = { "Orthogonal", "Diagonal",
+            "Alternating"};
+
+        string[] colors = { "Rainbow", "Malachite",
+            "Black White", "Wall", "Purple Sky", "Blur"};
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -77,15 +82,23 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(51, 10);
             this.textBox1.Name = "textBox1";
+            //default seed value
+            this.textBox1.Text = "0";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 3;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(51, 44);
             this.textBox2.Name = "textBox2";
+            //default gens value
+            this.textBox2.Text = "100";
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 4;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // comboBox1
             // 
@@ -94,6 +107,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 5;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -111,6 +125,7 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(121, 21);
             this.comboBox2.TabIndex = 7;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -130,6 +145,7 @@
             this.button2.TabIndex = 9;
             this.button2.Text = "Start";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // panel1
             // 
@@ -157,6 +173,7 @@
             this.label5.Size = new System.Drawing.Size(62, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Hash Value";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // Form1
             // 
@@ -201,4 +218,3 @@
         private System.Windows.Forms.Label label5;
     }
 }
-
