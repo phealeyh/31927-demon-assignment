@@ -12,8 +12,12 @@ namespace Demon
 {
     public partial class Form1 : Form
     {
+        private const int ROWS = 240;
+        private const int COLUMNS = 320;
+              
         public Form1()
         {
+            //Cells cells = new cells();
             InitializeComponent();
             addItemsToRulesComboBox();
             addItemsToColorsComboBox();
@@ -25,7 +29,6 @@ namespace Demon
             {
                 comboBox2.Items.Add(colors[i]);
             }
-
         }
 
         private void addItemsToRulesComboBox()
@@ -72,15 +75,28 @@ namespace Demon
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            //main paint panel
+            Random number = new Random(100);
+            //get first point (x coordinate is 0)
+            //get second point
+            //get third point
+            //get fourht point (x coordinate is 0)
+            //get boundary points of the panel
+            Color randomColor = Color.FromArgb(number.Next(0,255), number.Next(0,255), number.Next(0,255));
+            Rectangle[,] retangleMatrix = new Rectangle[240,320];
+            Rectangle r = new Rectangle(new Point(2,92), new Size(5,5));
+            e.Graphics.FillRectangle(new SolidBrush(randomColor), r);
+            for(int row = 0; row < 240; row++)
+            {
+                for(int col = 0; col < 320; col++)
+                {
+                    
+                    //rectangleMatrix[row, col] = new Rectangle(new Point(), new Size(4,4));
+                    //show pixel
+                }
+            }
 
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-            //generations label
-
-        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -98,24 +114,37 @@ namespace Demon
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             //rules combo box
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string rules, colors;
-            int seed, gens;
-            rules = comboBox1.Text;
-            colors = comboBox2.Text;
-            if (!int.TryParse(textBox1.Text, out seed) && !int.TryParse(textBox2.Text, out gens))
+            string rule, color;
+            int seed = 0, gens;
+            rule = comboBox1.Text;
+            color = comboBox2.Text;
+            if (!int.TryParse(textBox1.Text, out seed) || !int.TryParse(textBox2.Text, out gens))
             {
-                MessageBox.Show("Seed or Generation is not a number");
+                MessageBox.Show("Seed or Generation is not a positive integer");
             }
-            //start button
             else{
-                //execute code here and start the automata with the given parameters
+                //start first generation
+                for (int i = 1; i <= gens; i++)
+                {
+                    label6.Text = i.ToString();
+                }
             }
         }
+
+        private void generateLine(int i)
+        {
+
+        }
+
+        private bool isPositiveNumber(string line, out int number)
+        {
+            return Int32.TryParse(line, out number) || number < 0;
+        }
+
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -127,5 +156,13 @@ namespace Demon
         {
             //hash value label
         }
+
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            //generations label
+
+        }
+
     }
 }
