@@ -144,8 +144,16 @@ namespace Demon
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            //reset button 
+            //reset button
+            if (!int.TryParse(textBox1.Text, out seed))
+            {
+                MessageBox.Show("Seed is not an integer");
+            }
+            else
+            {
+                generateSquares();
+                paintPanel();
+            }
 
         }
 
@@ -170,6 +178,7 @@ namespace Demon
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             //rules combo box
         }
 
@@ -179,17 +188,17 @@ namespace Demon
             int gens;
             rule = comboBox1.Text;
             color = comboBox2.Text;
-            if (!int.TryParse(textBox1.Text, out seed) || !int.TryParse(textBox2.Text, out gens))
+            if (!int.TryParse(textBox2.Text, out gens))
             {
                 MessageBox.Show("Seed or Generation is not a positive integer");
             }
-            else{
+            else
+            {
                 createGraphicResourses();
                 generateSquares();
                 paintPanel();
                 for (int i = 1; i <= gens; i++)
                 {
-
                     label6.Text = i.ToString();
                 }
             }
