@@ -123,7 +123,6 @@ namespace Demon
                 case 7:
                     currentState = State.YELLOW;
                     break;
-
             }
         }
 
