@@ -20,7 +20,34 @@ namespace Demon
         public Cell[][] generatePattern(string rule)
         {
             //go through the cell matrix based on the given rule
+            if (rule.Equals("Orthogonal"))
+            {
+                generateOrthogonalPattern();
+            }
+            else if (rule.Equals("Diagonal"))
+            {
+                generateDiagonalPattern();
+            }
+            else
+            {
+                generateAlternatingPattern();
+            }
             return rectangleMatrix;
+        }
+
+        private void generateOrthogonalPattern()
+        {
+            //check state of orthogonal
+        }
+
+        private void generateDiagonalPattern()
+        {
+
+        }
+
+        private void generateAlternatingPattern()
+        {
+
         }
     }
 }

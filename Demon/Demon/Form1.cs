@@ -54,7 +54,8 @@ namespace Demon
             generation_count += (int)e.Argument;
             for (int i = prev_count; i <= generation_count; i++)
             {
-                generateSquares();
+                //update matrix based on pattern
+                //rectangleMatrix = new PatternGenerator(rectangleMatrix).generatePattern(comboBox1.Text);
                 paintBitmapBuffer();
                 bgWorker.ReportProgress(i);
             }
