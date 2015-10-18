@@ -48,12 +48,14 @@ namespace Demon
 
         private void generateSquares()
         {
-            for (int col = 0; col < COLUMNS; col++)
+            for (int row = 0; row < ROWS; row++)
             {
-                int x = col * SQUARE_SIDE + 2;
-                for (int row = 0; row < ROWS; row++)
+                //get y coordinate of row
+                int y = row * SQUARE_SIDE + panel1.Top;
+                for (int col = 0; col < COLUMNS; col++)
                 {
-                    int y = row * SQUARE_SIDE + 71;
+                    //get x coordinate of column
+                    int x = col * SQUARE_SIDE + panel1.Left;
                     rectangleMatrix[row][col] = new Rectangle(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
                 }
             }
@@ -77,10 +79,10 @@ namespace Demon
                     bufferGraphics.FillRectangle(new SolidBrush(color), rectangleMatrix[row][col]);
                 }
             }
-            panelGraphics.DrawImageUnscaled(buffer, 2, 71);
-
+            panelGraphics.DrawImageUnscaled(buffer, 0,0); 
             // draw the buffer to panel1 using its graphic object
         }
+
 
         private void createGraphicResourses()
         {
@@ -142,6 +144,7 @@ namespace Demon
 
         private void button1_Click(object sender, EventArgs e)
         {
+
             //reset button 
 
         }
@@ -173,7 +176,7 @@ namespace Demon
         private void button2_Click(object sender, EventArgs e)
         {
             string rule, color;
-            int seed = 0, gens;
+            int gens;
             rule = comboBox1.Text;
             color = comboBox2.Text;
             if (!int.TryParse(textBox1.Text, out seed) || !int.TryParse(textBox2.Text, out gens))
@@ -181,9 +184,12 @@ namespace Demon
                 MessageBox.Show("Seed or Generation is not a positive integer");
             }
             else{
-                //start first generation
+                createGraphicResourses();
+                generateSquares();
+                paintPanel();
                 for (int i = 1; i <= gens; i++)
                 {
+
                     label6.Text = i.ToString();
                 }
             }
