@@ -12,7 +12,7 @@ namespace Demon
 {
     public partial class Form1 : Form
     {
-        private int seed = 0;
+        private int seed = 0, generation_count = 0;
         private Bitmap buffer = null;
         private Graphics panelGraphics = null;
         private Graphics bufferGraphics = null;
@@ -20,6 +20,7 @@ namespace Demon
         private const int ROWS = 240;
         private const int COLUMNS = 320;
         private const int SQUARE_SIDE = 2;
+        private BackgroundWorker worker;
 
         public Form1()
         {
@@ -36,8 +37,47 @@ namespace Demon
             addItemsToColorsComboBox();
             createGraphicResourses();
             generateSquares();
-            paintPanel();
+            paintBitmapBuffer();
+            worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += worker_StartSquares;
+            worker.ProgressChanged += worker_DisplaySquares;
+            worker.RunWorkerCompleted += worker_FinishSquares;
+
         }
+
+        private void worker_StartSquares(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bgWorker = (BackgroundWorker)sender;
+            int prev_count = generation_count;
+            generation_count += (int)e.Argument;
+            for (int i = prev_count; i <= generation_count; i++)
+            {
+                generateSquares();
+                paintBitmapBuffer();
+                bgWorker.ReportProgress(i);
+            }
+        }
+
+        private void worker_DisplaySquares(object sender, ProgressChangedEventArgs e)
+        {
+            if (!worker.CancellationPending)
+            {
+                panelGraphics.DrawImageUnscaled(buffer, 0, 0);
+                label6.Text = e.ProgressPercentage.ToString();
+            }
+        }
+
+
+        private void worker_FinishSquares(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!worker.CancellationPending)
+            {
+                this.Enabled = true;
+            }
+        }
+
 
         private void initialiseArray()
         {
@@ -67,7 +107,7 @@ namespace Demon
 
 
 
-        private void paintPanel()
+        private void paintBitmapBuffer()
         {
             // clear the buffer of previous squares
             // using panel1 background color
@@ -79,20 +119,17 @@ namespace Demon
                 for (int col = 0; col < COLUMNS; col++)
                 {
                     Cell rect = rectangleMatrix[row][col];
-                    string colorName = "" + rect.getCurrentState;
+                    string colorName = rect.getCurrentState.ToString();
                     Color color = Color.FromName(colorName);
                     bufferGraphics.FillRectangle(new SolidBrush(color), rect.rectangle);
                 }
             }
-            panelGraphics.DrawImageUnscaled(buffer, 0,0); 
-            // draw the buffer to panel1 using its graphic object
         }
 
 
         private void createGraphicResourses()
         {
-            // microsoft recommends disposing of graphic resources
-            // as soon as they are no longer needed.
+            //initialises the graphics resources
             if (panelGraphics != null) panelGraphics.Dispose();
             if (bufferGraphics != null) bufferGraphics.Dispose();
             if (buffer != null) buffer.Dispose();
@@ -131,6 +168,21 @@ namespace Demon
             //main form
         }
         
+        private void label1_Click(object sender, EventArgs e)
+        {
+            //seed label
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            //gens label
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            //rules label
+
+        }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -138,6 +190,11 @@ namespace Demon
         }
 
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            //seed text box
+
+        }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -161,8 +218,11 @@ namespace Demon
             }
             else
             {
+                generation_count = 0;
                 generateSquares();
-                paintPanel();
+                paintBitmapBuffer();
+                label6.Text = generation_count.ToString();
+                panelGraphics.DrawImageUnscaled(buffer, 0, 0);
             }
 
         }
@@ -170,38 +230,50 @@ namespace Demon
 
         private void button2_Click(object sender, EventArgs e)
         {
+            int generation;
             string rule, color;
-            int gens;
             rule = comboBox1.Text;
             color = comboBox2.Text;
-            if (!int.TryParse(textBox2.Text, out gens))
+            if (isInvalidNumber(textBox2.Text, out generation))
             {
-                MessageBox.Show(" Generation is not a positive integer");
+                MessageBox.Show(" Generation is not a positive integer or a number greater than or equal to 1");
             }
             else
             {
                 //start generation
-                for (int i = 1; i <= gens; i++)
+                if (buffer.Width != this.Width || buffer.Height != this.Height)
                 {
-                    PatternGenerator pattern = new PatternGenerator(rectangleMatrix);
-                    //pattern.generatePattern;
-                    label6.Text = i.ToString();
+                    // in case the  cuserhanged the form size while last running
+                    createGraphicResourses();
                 }
+                this.Enabled = false;
+                //pass gens as argument
+                worker.RunWorkerAsync(generation);
             }
         }
 
-        private bool isPositiveNumber(string line, out int number)
+        private bool isInvalidNumber(string line, out int number)
         {
-            return Int32.TryParse(line, out number) || number < 0;
+            return !Int32.TryParse(line, out number) || number < 1;
         }
 
-          
+
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             //colors combo box
-
         }
 
+        private void label5_Click(object sender, EventArgs e)
+        {
+            //hash value label
+        }
+
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            //generations label
+
+        }
 
     }
 }
