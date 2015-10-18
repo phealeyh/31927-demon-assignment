@@ -12,17 +12,18 @@ namespace Demon
 {
     public partial class Form1 : Form
     {
+        private int seed = 0;
         private Bitmap buffer = null;
         private Graphics panelGraphics = null;
         private Graphics bufferGraphics = null;
-        private Rectangle[][] rectangleMatrix;
+        private Cell[][] rectangleMatrix;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
         private const int SQUARE_SIDE = 2;
-        private int seed = 0;
+
         public Form1()
         {
-            rectangleMatrix = new Rectangle[ROWS][];
+            rectangleMatrix = new Cell[ROWS][];
             initialiseArray();
             // Define the border style of the form to a dialog box.
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -40,14 +41,16 @@ namespace Demon
 
         private void initialiseArray()
         {
-            for (int i = 0; i < ROWS; i++)
+            for (int row = 0; row < ROWS; row++)
             {
-                rectangleMatrix[i] = new Rectangle[COLUMNS];
+                rectangleMatrix[row] = new Cell[COLUMNS];
             }
         }
 
-        private void generateSquares()
+        public void generateSquares()
         {
+            Random r = new Random(seed);
+
             for (int row = 0; row < ROWS; row++)
             {
                 //get y coordinate of row
@@ -56,7 +59,8 @@ namespace Demon
                 {
                     //get x coordinate of column
                     int x = col * SQUARE_SIDE + panel1.Left;
-                    rectangleMatrix[row][col] = new Rectangle(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    rectangleMatrix[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    rectangleMatrix[row][col].setStateRandomly(r.Next(0, 7));
                 }
             }
         }
@@ -65,7 +69,6 @@ namespace Demon
 
         private void paintPanel()
         {
-            Random r = new Random(seed);
             // clear the buffer of previous squares
             // using panel1 background color
             bufferGraphics.Clear(panel1.BackColor);
@@ -75,8 +78,10 @@ namespace Demon
             {
                 for (int col = 0; col < COLUMNS; col++)
                 {
-                    Color color = Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255));
-                    bufferGraphics.FillRectangle(new SolidBrush(color), rectangleMatrix[row][col]);
+                    Cell rect = rectangleMatrix[row][col];
+                    string colorName = "" + rect.getCurrentState;
+                    Color color = Color.FromName(colorName);
+                    bufferGraphics.FillRectangle(new SolidBrush(color), rect.rectangle);
                 }
             }
             panelGraphics.DrawImageUnscaled(buffer, 0,0); 
@@ -126,20 +131,25 @@ namespace Demon
             //main form
         }
         
-        private void label1_Click(object sender, EventArgs e)
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            //seed label
+            panelGraphics.DrawImageUnscaled(buffer, 0, 0);
         }
 
-        private void label2_Click(object sender, EventArgs e)
+
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            //gens label
+
+            //generation text box
+
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //rules label
 
+            //rules combo box
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -157,30 +167,6 @@ namespace Demon
 
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            panelGraphics.DrawImageUnscaled(buffer, 0, 0);
-        }
-
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            //seed text box
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-            //generation text box
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            //rules combo box
-        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -190,15 +176,15 @@ namespace Demon
             color = comboBox2.Text;
             if (!int.TryParse(textBox2.Text, out gens))
             {
-                MessageBox.Show("Seed or Generation is not a positive integer");
+                MessageBox.Show(" Generation is not a positive integer");
             }
             else
             {
-                createGraphicResourses();
-                generateSquares();
-                paintPanel();
+                //start generation
                 for (int i = 1; i <= gens; i++)
                 {
+                    PatternGenerator pattern = new PatternGenerator(rectangleMatrix);
+                    //pattern.generatePattern;
                     label6.Text = i.ToString();
                 }
             }
@@ -216,17 +202,6 @@ namespace Demon
 
         }
 
-        private void label5_Click(object sender, EventArgs e)
-        {
-            //hash value label
-        }
-
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-            //generations label
-
-        }
 
     }
 }
