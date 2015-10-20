@@ -102,7 +102,7 @@ namespace Demon
                     int x = col * SQUARE_SIDE + panel1.Left;
                     rectangleMatrix[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
                     rectangleMatrix[row][col].setStateRandomly(r.Next(0, 7));
-                    rectangleMatrix[row][col].setPotentialStates();
+                    //rectangleMatrix[row][col].setPotentialStates();
                 }
             }
         }

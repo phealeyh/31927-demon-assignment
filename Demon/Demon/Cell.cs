@@ -22,55 +22,38 @@ namespace Demon
     class Cell
     {
         private Rectangle rect;
-        private State previousState, currentState, nextState;
+        private State currentState;
         public Cell(Point location, Size size)
         {
             rect = new Rectangle(location, size);
             currentState = new State();
-            previousState = new State();
-            nextState = new State();
         }
 
 
-
-        public void setPotentialStates()
+        public State nextState()
         {
+            if (currentState == State.RED) return State.GREEN;
+            else if (currentState == State.GREEN) return State.BLUE;
+            else if (currentState == State.BLUE) return State.LIGHTGREEN;
+            else if (currentState == State.LIGHTGREEN) return State.DARKGREEN;
+            else if (currentState == State.DARKGREEN) return State.ORANGE;
+            else if (currentState == State.ORANGE) return State.PURPLE;
+            else if (currentState == State.PURPLE) return State.YELLOW;
+            //return next state for the color yellow
+            else return State.RED;
+        }
 
-            switch (currentState)
-            {
-                case State.RED:
-                    previousState = State.YELLOW;
-                    nextState = State.GREEN;
-                    break;
-                case State.GREEN:
-                    previousState = State.RED;
-                    nextState = State.BLUE;
-                    break;
-                case State.BLUE:
-                    previousState = State.GREEN;
-                    nextState = State.LIGHTGREEN;
-                    break;
-                case State.LIGHTGREEN:
-                    previousState = State.BLUE;
-                    nextState = State.DARKGREEN;
-                    break;
-                case State.DARKGREEN:
-                    previousState = State.LIGHTGREEN;
-                    nextState = State.ORANGE;
-                    break;
-                case State.ORANGE:
-                    previousState = State.DARKGREEN;
-                    nextState = State.PURPLE;
-                    break;
-                case State.PURPLE:
-                    previousState = State.ORANGE;
-                    nextState = State.YELLOW;
-                    break;
-                case State.YELLOW:
-                    previousState = State.PURPLE;
-                    nextState = State.RED;
-                    break;
-            }
+        public State prevState()
+        {
+            if (currentState == State.RED) return State.YELLOW;
+            else if (currentState == State.GREEN) return State.RED;
+            else if (currentState == State.BLUE) return State.GREEN;
+            else if (currentState == State.LIGHTGREEN) return State.BLUE;
+            else if (currentState == State.DARKGREEN) return State.LIGHTGREEN;
+            else if (currentState == State.ORANGE) return State.DARKGREEN;
+            else if (currentState == State.PURPLE) return State.ORANGE;
+            //return next state for the color yellow
+            else return State.PURPLE;
         }
 
         public State getCurrentState
@@ -83,15 +66,6 @@ namespace Demon
             currentState = state;
         }
 
-        public State getPreviousState
-        {
-            get { return previousState; }
-        }
-
-        public State getNextState
-        {
-            get { return nextState; }
-        }
 
 
 

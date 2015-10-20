@@ -44,12 +44,12 @@ namespace Demon
             {
                 for(int column = 0; column < COLUMNS; column++)
                 {
-                    State nextPotentialState = rectangleMatrix[row][column].getNextState;
+                    State nextPotentialState = rectangleMatrix[row][column].nextState();
                     //get next state if one of the states has the next state
                     if (neighboursHaveNextState(row,column,nextPotentialState))
                     {
                         rectangleMatrix[row][column].setState(nextPotentialState);
-                        rectangleMatrix[row][column].setPotentialStates();
+                        //rectangleMatrix[row][column].setPotentialStates();
                     }
 
                 }
@@ -58,11 +58,15 @@ namespace Demon
 
         private bool neighboursHaveNextState(int row, int column,State nextPotentialState)
         {
+            //create array that stores the current cell's neighbours
+            //Ordering: top, right, bottom, left
+            Cell[] neighbors = {
+                rectangleMatrix[row - 1][column],
+                rectangleMatrix[row][column + 1],
+                rectangleMatrix[row + 1][column],
+                rectangleMatrix[row][column - 1]
+            };
             //loop through all of the neighbours for particular state
-            for(int i = 0; i < 4; i++)
-            {
-
-            }
             return true;
         }
 
