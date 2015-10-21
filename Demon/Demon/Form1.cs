@@ -16,18 +16,15 @@ namespace Demon
         private Bitmap buffer = null;
         private Graphics panelGraphics = null;
         private Graphics bufferGraphics = null;
-        private Cell[][] rectangleMatrix;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
         private const int SQUARE_SIDE = 2;
         private BackgroundWorker worker;
-        private PatternGenerator patternGenerator;
+        private CellMatrix cellMatrix;
 
         public Form1()
         {
-            rectangleMatrix = new Cell[ROWS][];
-            initialiseArray();
-            patternGenerator = new PatternGenerator(rectangleMatrix);
+            cellMatrix = new CellMatrix();
             // Define the border style of the form to a dialog box.
             FormBorderStyle = FormBorderStyle.FixedDialog;
             // Set the MaximizeBox to false to remove the maximize box.
@@ -37,8 +34,8 @@ namespace Demon
             InitializeComponent();
             addItemsToRulesComboBox();
             addItemsToColorsComboBox();
-            createGraphicResourses();
             generateSquares();
+            createGraphicResourses();
             paintBitmapBuffer();
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -57,11 +54,8 @@ namespace Demon
             //one generation too many
             for (int i = prev_count; i < generation_count; i++)
             {
-                PatternGenerator pg = new PatternGenerator(rectangleMatrix);
                 //update matrix based on pattern
-
-                rectangleMatrix = pg.generatePattern(comboBox1.Text);
-
+                cellMatrix.generateNextGeneration(comboBox1.Text);
                 paintBitmapBuffer();
                 bgWorker.ReportProgress(i + 1);
 
@@ -87,14 +81,6 @@ namespace Demon
         }
 
 
-        private void initialiseArray()
-        {
-            for (int row = 0; row < ROWS; row++)
-            {
-                rectangleMatrix[row] = new Cell[COLUMNS];
-            }
-        }
-
         public void generateSquares()
         {
             Random r = new Random(seed);
@@ -107,13 +93,11 @@ namespace Demon
                 {
                     //get x coordinate of column
                     int x = col * SQUARE_SIDE + panel1.Left;
-                    rectangleMatrix[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
-                    rectangleMatrix[row][col].setStateRandomly(r.Next(0, 7));
+                    cellMatrix.getCells[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    cellMatrix.getCells[row][col].setStateRandomly(r.Next(0, 7));
                 }
             }
         }
-
-
 
         private void paintBitmapBuffer()
         {
@@ -126,7 +110,7 @@ namespace Demon
             {
                 for (int col = 0; col < COLUMNS; col++)
                 {
-                    Cell rect = rectangleMatrix[row][col];
+                    Cell rect = cellMatrix.getCells[row][col];
                     string colorName = rect.getCurrentState.ToString();
                     Color color = Color.FromName(colorName);
                     bufferGraphics.FillRectangle(new SolidBrush(color), rect.rectangle);
