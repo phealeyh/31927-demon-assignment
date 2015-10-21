@@ -18,7 +18,7 @@ namespace Demon
 
     class CellMatrix
     {
-        private Cell[][] currentGeneration, nextGeneration;
+        private Cell[][] currentGeneration;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
 
@@ -34,7 +34,6 @@ namespace Demon
             {
                 currentGeneration[row] = new Cell[COLUMNS];
             }
-            nextGeneration = currentGeneration;
         }
 
 
@@ -55,7 +54,6 @@ namespace Demon
             {
                 generateAlternatingPattern();
             }
-            currentGeneration = nextGeneration;
         }
 
         private void generateOrthogonalPattern()
