@@ -54,12 +54,17 @@ namespace Demon
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
             int prev_count = generation_count;
             generation_count += (int)e.Argument;
-            for (int i = prev_count; i <= generation_count; i++)
+            //one generation too many
+            for (int i = prev_count; i < generation_count; i++)
             {
+                PatternGenerator pg = new PatternGenerator(rectangleMatrix);
                 //update matrix based on pattern
-                //rectangleMatrix = new PatternGenerator(rectangleMatrix).generatePattern(comboBox1.Text);
+
+                rectangleMatrix = pg.generatePattern(comboBox1.Text);
+
                 paintBitmapBuffer();
-                bgWorker.ReportProgress(i);
+                bgWorker.ReportProgress(i + 1);
+
             }
         }
 
@@ -104,7 +109,6 @@ namespace Demon
                     int x = col * SQUARE_SIDE + panel1.Left;
                     rectangleMatrix[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
                     rectangleMatrix[row][col].setStateRandomly(r.Next(0, 7));
-                    //rectangleMatrix[row][col].setPotentialStates();
                 }
             }
         }
@@ -244,8 +248,6 @@ namespace Demon
             }
             else
             {
-                patternGenerator.setRule(rule);
-                MessageBox.Show(patternGenerator.getRule.ToString());
                 //set the patternGenerator rule and color
                 //start generation
                 if (buffer.Width != this.Width || buffer.Height != this.Height)

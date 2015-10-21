@@ -7,4 +7,3 @@ Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\
 Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\Assignments\Assignment2\Demon\Demon\obj\Debug\Demon.csproj.GenerateResource.Cache
 Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\Assignments\Assignment2\Demon\Demon\obj\Debug\Demon.exe
 Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\Assignments\Assignment2\Demon\Demon\obj\Debug\Demon.pdb
-Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\Assignments\Assignment2\Demon\Demon\obj\Debug\Demon.csprojResolveAssemblyReference.cache

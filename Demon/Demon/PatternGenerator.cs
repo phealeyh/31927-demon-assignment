@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,20 +23,23 @@ namespace Demon
         private Cell[][] rectangleMatrix;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
-        private Rule currentRule;
-        public PatternGenerator(Cell[][] rectangleMatrix)
+
+        public PatternGenerator(Cell[][] rectMatrix)
         {
-            this.rectangleMatrix = rectangleMatrix;
+            rectangleMatrix = rectMatrix;
         }
 
-        public Cell[][] generatePattern()
+
+
+
+        public Cell[][] generatePattern(string rule)
         {
             //go through the cell matrix based on the given rule
-            if (currentRule == Rule.Orthogonal)
+            if (rule.Equals(Rule.Orthogonal.ToString()))
             {
                 generateOrthogonalPattern();
             }
-            else if (currentRule == Rule.Diagonal)
+            else if (rule.Equals(Rule.Diagonal.ToString()))
             {
                 generateDiagonalPattern();
             }
@@ -46,50 +50,55 @@ namespace Demon
             return rectangleMatrix;
         }
 
+
+
         private void generateOrthogonalPattern()
         {
-            //check state of orthogonal
+            //go through 2d matrix
             for(int row = 0; row < ROWS; row++)
             {
-                for(int column = 0; column < COLUMNS; column++)
+                for (int column = 0; column < COLUMNS; column++)
                 {
-                    State nextPotentialState = rectangleMatrix[row][column].nextState();
-                    //get next state if one of the states has the next state
-                    if (neighboursHaveNextState(row,column,nextPotentialState))
+                    State nextState = rectangleMatrix[row][column].getCurrentState;
+                    //send in the cell for comparison
+                    if (nextStateExists(getOrthogonalCells(row,column), nextState))
                     {
-                        rectangleMatrix[row][column].setState(nextPotentialState);
+                        rectangleMatrix[row][column].setState(nextState);
                     }
 
                 }
             }
         }
 
-        private bool neighboursHaveNextState(int row, int column,State nextPotentialState)
+        private Cell[] getOrthogonalCells(int row, int col)
         {
-            //create array that stores the current cell's neighbours
-            //Ordering: top, right, bottom, left
-            Cell[] neighbors = {
-                rectangleMatrix[row - 1][column],
-                rectangleMatrix[row][column + 1],
-                rectangleMatrix[row + 1][column],
-                rectangleMatrix[row][column - 1]
-            };
-            //loop through all of the neighbourss for particular state
-            return true;
+            //includes top, right , bottom and left
+            Cell[] positionalCells = new Cell[4];
+            for (int i = 0; i < positionalCells.Length; i++)
+            {
+                positionalCells[i] = new Cell();
+            }
+            //get the top cell
+            positionalCells[0] = rectangleMatrix[row + (ROWS - 1) % ROWS][col];
+            //get the bottom cell
+            positionalCells[1] = rectangleMatrix[row + 1 % ROWS][col];
+            //get the left cell
+            positionalCells[2] = rectangleMatrix[row][col + (COLUMNS - 1) % COLUMNS];
+            //get the right cell
+            positionalCells[3] = rectangleMatrix[row][col + 1 % COLUMNS];
+            return positionalCells;
         }
 
-        public void setRule(string rule)
+        private bool nextStateExists(Cell[] targetCells, State nextState)
         {
-            if (Rule.Orthogonal.ToString().Equals(rule)) currentRule = Rule.Orthogonal;
-            else if (Rule.Diagonal.ToString().Equals(rule)) currentRule = Rule.Diagonal;
-            else currentRule = Rule.Alternating;
-
+            for(int i = 0; i < targetCells.Length; i++)
+            {
+                if (targetCells[i].getCurrentState == nextState) return true;
+            }
+            return false;
         }
 
-        public Rule getRule
-        {
-            get { return currentRule; }
-        }
+
 
         private void generateDiagonalPattern()
         {
@@ -100,5 +109,7 @@ namespace Demon
         {
 
         }
+
     }
+
 }
