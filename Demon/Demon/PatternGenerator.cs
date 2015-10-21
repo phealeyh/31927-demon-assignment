@@ -8,25 +8,34 @@ using System.Threading.Tasks;
 namespace Demon
 {
 
+    enum Rule
+    {
+        Orthogonal,
+        Diagonal,
+        Alternating
+    };
+
+
+
     class PatternGenerator
     {
         private Cell[][] rectangleMatrix;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
-
+        private Rule currentRule;
         public PatternGenerator(Cell[][] rectangleMatrix)
         {
             this.rectangleMatrix = rectangleMatrix;
         }
 
-        public Cell[][] generatePattern(string rule)
+        public Cell[][] generatePattern()
         {
             //go through the cell matrix based on the given rule
-            if (rule.Equals("Orthogonal"))
+            if (currentRule == Rule.Orthogonal)
             {
                 generateOrthogonalPattern();
             }
-            else if (rule.Equals("Diagonal"))
+            else if (currentRule == Rule.Diagonal)
             {
                 generateDiagonalPattern();
             }
@@ -49,7 +58,6 @@ namespace Demon
                     if (neighboursHaveNextState(row,column,nextPotentialState))
                     {
                         rectangleMatrix[row][column].setState(nextPotentialState);
-                        //rectangleMatrix[row][column].setPotentialStates();
                     }
 
                 }
@@ -66,8 +74,21 @@ namespace Demon
                 rectangleMatrix[row + 1][column],
                 rectangleMatrix[row][column - 1]
             };
-            //loop through all of the neighbours for particular state
+            //loop through all of the neighbourss for particular state
             return true;
+        }
+
+        public void setRule(string rule)
+        {
+            if (Rule.Orthogonal.ToString().Equals(rule)) currentRule = Rule.Orthogonal;
+            else if (Rule.Diagonal.ToString().Equals(rule)) currentRule = Rule.Diagonal;
+            else currentRule = Rule.Alternating;
+
+        }
+
+        public Rule getRule
+        {
+            get { return currentRule; }
         }
 
         private void generateDiagonalPattern()

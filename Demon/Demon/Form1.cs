@@ -21,11 +21,13 @@ namespace Demon
         private const int COLUMNS = 320;
         private const int SQUARE_SIDE = 2;
         private BackgroundWorker worker;
+        private PatternGenerator patternGenerator;
 
         public Form1()
         {
             rectangleMatrix = new Cell[ROWS][];
             initialiseArray();
+            patternGenerator = new PatternGenerator(rectangleMatrix);
             // Define the border style of the form to a dialog box.
             FormBorderStyle = FormBorderStyle.FixedDialog;
             // Set the MaximizeBox to false to remove the maximize box.
@@ -242,6 +244,9 @@ namespace Demon
             }
             else
             {
+                patternGenerator.setRule(rule);
+                MessageBox.Show(patternGenerator.getRule.ToString());
+                //set the patternGenerator rule and color
                 //start generation
                 if (buffer.Width != this.Width || buffer.Height != this.Height)
                 {
