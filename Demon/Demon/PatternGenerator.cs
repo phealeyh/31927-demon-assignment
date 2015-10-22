@@ -12,14 +12,11 @@ namespace Demon
 
 
     class PatternGenerator
-    {
-        private Cell[][] rectangleMatrix;
+    { 
 
 
 
 
-
-   
     }
 
 }

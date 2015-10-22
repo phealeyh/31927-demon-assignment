@@ -18,7 +18,7 @@ namespace Demon
         private Graphics bufferGraphics = null;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
-        private const int SQUARE_SIDE = 2;
+        private const int SQUARE_SIDE = 5;
         private BackgroundWorker worker;
         private CellMatrix cellMatrix;
 
@@ -51,10 +51,9 @@ namespace Demon
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
             int prev_count = generation_count;
             generation_count += (int)e.Argument;
-            //one generation too many
             for (int i = prev_count; i < generation_count; i++)
             {
-                //update matrix based on pattern
+                //update cellMatrix.getCells()() based on pattern
                 cellMatrix.generateNextGeneration(comboBox1.Text);
                 paintBitmapBuffer();
                 bgWorker.ReportProgress(i + 1);
@@ -81,6 +80,8 @@ namespace Demon
         }
 
 
+
+
         public void generateSquares()
         {
             Random r = new Random(seed);
@@ -93,8 +94,9 @@ namespace Demon
                 {
                     //get x coordinate of column
                     int x = col * SQUARE_SIDE + panel1.Left;
-                    cellMatrix.getCells[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
-                    cellMatrix.getCells[row][col].setStateRandomly(r.Next(0, 7));
+                    Cell cell = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    cell.setStateRandomly(r.Next(0, 7));
+                    cellMatrix.getCells[row][col] = cell;
                 }
             }
         }
@@ -113,7 +115,7 @@ namespace Demon
                     Cell rect = cellMatrix.getCells[row][col];
                     string colorName = rect.getCurrentState.ToString();
                     Color color = Color.FromName(colorName);
-                    bufferGraphics.FillRectangle(new SolidBrush(color), rect.rectangle);
+                    bufferGraphics.FillRectangle(new SolidBrush(color), cellMatrix.getCells[row][col].rectangle);
                 }
             }
         }

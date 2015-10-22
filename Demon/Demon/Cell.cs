@@ -48,18 +48,6 @@ namespace Demon
             else return State.RED;
         }
 
-        public State prevState()
-        {
-            if (currentState == State.RED) return State.YELLOW;
-            else if (currentState == State.GREEN) return State.RED;
-            else if (currentState == State.BLUE) return State.GREEN;
-            else if (currentState == State.LIGHTGREEN) return State.BLUE;
-            else if (currentState == State.DARKGREEN) return State.LIGHTGREEN;
-            else if (currentState == State.ORANGE) return State.DARKGREEN;
-            else if (currentState == State.PURPLE) return State.ORANGE;
-            //return next state for the color yellow
-            else return State.PURPLE;
-        }
 
         public State getCurrentState
         {
@@ -111,6 +99,7 @@ namespace Demon
         {
             get { return rect; }
         }
+
 
     }
 

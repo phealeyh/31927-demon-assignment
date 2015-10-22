@@ -58,58 +58,87 @@ namespace Demon
 
         private void generateOrthogonalPattern()
         {
+            Cell[][] temp = currentGeneration;
             //go through 2d matrix
-            for (int row = 1; row < ROWS; row++)
+            for (int row = 0; row < ROWS; row++)
             {
-                for (int column = 1; column < COLUMNS; column++)
+                for (int column = 0; column < COLUMNS; column++)
                 {
-                    State nextState = currentGeneration[row][column].nextState();
-                    //send in the cell for comparison
-                    if (nextStateExists(getOrthogonalCells(row, column), nextState))
+                    Cell cell = currentGeneration[row][column];
+                    if (nextStateExistsOrthogonally(row, column))
                     {
-                        currentGeneration[row][column].setState(nextState);
+                        cell.setState(cell.nextState());
+                        temp[row][column] = cell;
                     }
-
                 }
             }
+            currentGeneration = temp;
         }
 
-        private Cell[] getOrthogonalCells(int row, int col)
+        private bool nextStateExistsOrthogonally(int row, int col)
         {
+            Cell cell = currentGeneration[row][col];
             //includes top, right , bottom and left
-            Cell[] positionalCells = new Cell[4];
             //get the top cell
             int top = (row + ROWS - 1) % ROWS;
             int bottom = (row + 1) % ROWS;
             int left = (col + COLUMNS - 1) % COLUMNS;
             int right = (col + 1) % COLUMNS;
-            
-            //get the top cell
-            positionalCells[0] = currentGeneration[top][col];
-            //get the bottom cell
-            positionalCells[1] = currentGeneration[row + 1][col];
-            //get the left cell
-            positionalCells[2] = currentGeneration[row][col - 1];
-            //get the right cell
-            positionalCells[3] = currentGeneration[row][col + 1];
-            return positionalCells;
-        }
 
-        private bool nextStateExists(Cell[] targetCells, State nextState)
-        {
-            for (int i = 0; i < targetCells.Length; i++)
-            {
-                if (targetCells[i].getCurrentState == nextState) return true;
-            }
+            //get the top cell
+            if (currentGeneration[top][col].getCurrentState == cell.nextState()) { return true; }
+            //get the bottom cell
+            else if (currentGeneration[bottom][col].getCurrentState == cell.nextState()) { return true; }
+            //get the left cell
+            else if (currentGeneration[row][left].getCurrentState == cell.nextState()) { return true; }
+            //get the right cell
+            else if (currentGeneration[row][right].getCurrentState == cell.nextState()) { return true; }
+
             return false;
         }
 
 
 
+
         private void generateDiagonalPattern()
         {
+            Cell[][] temp = currentGeneration;
+            //go through 2d matrix
+            for (int row = 0; row < ROWS; row++)
+            {
+                for (int column = 0; column < COLUMNS; column++)
+                {
+                    Cell cell = currentGeneration[row][column];
+                    if (nextStateExistsDiagonally(row, column))
+                    {
+                        temp[row][column].setState(cell.nextState());
+                    }
+                }
+            }
+            currentGeneration = temp;
 
         }
+
+        private bool nextStateExistsDiagonally(int row, int col)
+        {
+            Cell cell = currentGeneration[row][col];
+            //includes top, right , bottom and left
+            //get the top cell
+            int top = (row + ROWS - 1) % ROWS;
+            int bottom = (row + 1) % ROWS;
+            int left = (col + COLUMNS - 1) % COLUMNS;
+            int right = (col + 1) % COLUMNS;
+
+            //get the top cell
+            if (currentGeneration[top][right].getCurrentState == cell.nextState()) return true;
+            else if (currentGeneration[top][left].getCurrentState == cell.nextState()) return true;
+            else if (currentGeneration[bottom][left].getCurrentState == cell.nextState()) return true;
+            else if (currentGeneration[bottom][right].getCurrentState == cell.nextState()) return true;
+            else return false;
+        }
+
+
+
 
         private void generateAlternatingPattern()
         {
