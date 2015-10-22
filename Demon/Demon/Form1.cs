@@ -51,10 +51,13 @@ namespace Demon
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
             int prev_count = generation_count;
             generation_count += (int)e.Argument;
+            string rule = comboBox1.Text;
             for (int i = prev_count; i < generation_count; i++)
             {
                 //update cellMatrix.getCells()() based on pattern
-                cellMatrix.generateNextGeneration(comboBox1.Text);
+                cellMatrix.generateNextGeneration(rule);
+                //check if the rule is alternating -- if it is then switch the rule over
+                //so that the next generation is using the new ones
                 paintBitmapBuffer();
                 bgWorker.ReportProgress(i + 1);
 
@@ -94,11 +97,11 @@ namespace Demon
                 {
                     //get x coordinate of column
                     int x = col * SQUARE_SIDE + panel1.Left;
-                    Cell cell = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
-                    cell.setStateRandomly(r.Next(0, 7));
-                    cellMatrix.getCells[row][col] = cell;
+                    cellMatrix.getCells[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    cellMatrix.getCells[row][col].setStateRandomly(r.Next(0, 8));
                 }
             }
+            label5.Text = cellMatrix.GetCellHash().ToString();
         }
 
         private void paintBitmapBuffer()

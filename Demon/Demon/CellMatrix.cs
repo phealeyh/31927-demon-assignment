@@ -151,6 +151,21 @@ namespace Demon
         }
 
 
+        public int GetCellHash()
+        {
+            int hash = 0, celval;
+
+            for (int row = 0; row < ROWS; row++)
+            {
+                for(int column = 0; column < COLUMNS; column++)
+                {
+                    celval = (int)currentGeneration[row][column].getCurrentState;
+                    hash += ((row + 1) * celval);
+                }
+            }
+            return hash;
+        }
+
 
     }
 }

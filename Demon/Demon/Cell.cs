@@ -24,10 +24,6 @@ namespace Demon
         private Rectangle rect;
         private State currentState;
 
-        public Cell()
-        {
-            currentState = new State();
-        }
         public Cell(Point location, Size size)
         {
             rect = new Rectangle(location, size);
@@ -58,10 +54,6 @@ namespace Demon
         {
             currentState = state;
         }
-
-
-
-
 
 
         public void setStateRandomly(int generatedNumber)
