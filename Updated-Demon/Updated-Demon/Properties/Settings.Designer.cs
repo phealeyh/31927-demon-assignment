@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Demon.Properties
+namespace Updated_Demon.Properties
 {
 
 
