@@ -25,7 +25,7 @@ namespace Updated_Demon
         Panel displayPanel;
         bool updatingBitmap = false;
 
-
+        #region Private Methods
         private void CreateCells()
         {
             currentMatrix = new Cell[rows, columns];
@@ -40,35 +40,6 @@ namespace Updated_Demon
             }
         }
 
-        public Demon(int rows, int columns, int cellSide, Panel panel)
-        {
-            this.rows = rows;
-            this.columns = columns;
-            this.cellSide = cellSide;
-            displayPanel = panel;
-            // create buffer resources
-            buffer = new Bitmap(columns * cellSide, rows * cellSide);
-            bufferGraphics = Graphics.FromImage(buffer);
-            CreateCells();
-        }
-
-        public object Current
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool MoveNext()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
-        }
 
         private void DrawDemon()
         {
@@ -122,7 +93,7 @@ namespace Updated_Demon
                 {
                     // don't worry about state 0. will handle this a different way
                     width = (end - col) * cellSide;
-                    currentMatrix[state].Add(new Rectangle(col * cellSide, y, width, cellSide));
+                    currentMatrix[state].Rectangle = new Rectangle(col * cellSide, y, width, cellSide);
                 }
 
                 col = end;
@@ -142,15 +113,6 @@ namespace Updated_Demon
             }
         }
 
-        public void DisplayDemon()
-        {
-            // draw bitmap to panel
-            if (!updatingBitmap)
-            {
-                // only do this if we aren't updating the bitmap
-                displayGraphics.DrawImageUnscaled(buffer, 0, 0);
-            }
-        }
 
         private void RandomiseCells(int seed)
         {
@@ -164,6 +126,48 @@ namespace Updated_Demon
                     // set new cell state to random state
                     currentMatrix[row, col].State = rnd.Next(Cell.NUM_STATE);
                 }
+            }
+        }
+        #endregion
+        #region Public Methods
+        public Demon(int rows, int columns, int cellSide, Panel panel)
+        {
+            this.rows = rows;
+            this.columns = columns;
+            this.cellSide = cellSide;
+            displayPanel = panel;
+            // create buffer resources
+            buffer = new Bitmap(columns * cellSide, rows * cellSide);
+            bufferGraphics = Graphics.FromImage(buffer);
+            CreateCells();
+        }
+
+        public object Current
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool MoveNext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void DisplayDemon()
+        {
+            // draw bitmap to panel
+            if (!updatingBitmap)
+            {
+                // only do this if we aren't updating the bitmap
+                displayGraphics.DrawImageUnscaled(buffer, 0, 0);
             }
         }
 
@@ -185,5 +189,7 @@ namespace Updated_Demon
             DrawDemon();
             numGen++;
         }
+        #endregion public metohds
     }
+
 }
