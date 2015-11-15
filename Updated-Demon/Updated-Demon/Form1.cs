@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Updated_Demon
 {
-    public partial class Form1 : Form
+    public partial class demonPanel : Form
     {
-        public Form1()
+        public demonPanel()
         {
             InitializeComponent();
         }

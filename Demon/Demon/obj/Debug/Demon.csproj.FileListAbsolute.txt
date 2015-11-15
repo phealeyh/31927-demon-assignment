@@ -7,3 +7,5 @@ c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\De
 c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\Demon.csproj.GenerateResource.Cache
 c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\Demon.exe
 c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\Demon.pdb
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\bin\Debug\Demon.exe.config
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.pdb
