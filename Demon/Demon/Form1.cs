@@ -3,28 +3,34 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Demon
 {
+    enum Numbers { zero, one, two, three };
+
     public partial class Form1 : Form
     {
+        String rule;
         private int seed = 0, generation_count = 0;
         private Bitmap buffer = null;
         private Graphics panelGraphics = null;
         private Graphics bufferGraphics = null;
+        private const int MAX_STATES = 8;
         private const int ROWS = 240;
         private const int COLUMNS = 320;
-        private const int SQUARE_SIDE = 5;
+        //change to 4
+        private const int SQUARE_SIDE = 2;
         private BackgroundWorker worker;
-        private CellMatrix cellMatrix;
-
+        private PatternGenerator patternGenerator;
+        private Rectangle[,] rectangles;
+        private Color[] palette;
         public Form1()
         {
-            cellMatrix = new CellMatrix();
+            rectangles = new Rectangle[ROWS, COLUMNS];
+            patternGenerator = new PatternGenerator(ROWS,COLUMNS);
             // Define the border style of the form to a dialog box.
             FormBorderStyle = FormBorderStyle.FixedDialog;
             // Set the MaximizeBox to false to remove the maximize box.
@@ -46,21 +52,32 @@ namespace Demon
 
         }
 
+
         private void worker_StartSquares(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
             int prev_count = generation_count;
             generation_count += (int)e.Argument;
-            string rule = comboBox1.Text;
             for (int i = prev_count; i < generation_count; i++)
             {
-                //update cellMatrix.getCells()() based on pattern
-                cellMatrix.generateNextGeneration(rule);
-                //check if the rule is alternating -- if it is then switch the rule over
-                //so that the next generation is using the new ones
+                if (Rule.Orthogonal.ToString().Equals(rule))
+                {
+                    patternGenerator.generateOrthogonalPattern();
+                }
+                else if (Rule.Diagonal.ToString().Equals(rule))
+                {
+                    patternGenerator.generateDiagonalPattern();
+                }
+                else //alternating
+                {
+                    patternGenerator.generateOrthogonalPattern();
+                    rule = Rule.Diagonal.ToString();
+                    patternGenerator.generateDiagonalPattern();
+                    rule = Rule.Alternating.ToString();
+                }
+                    
                 paintBitmapBuffer();
                 bgWorker.ReportProgress(i + 1);
-
             }
         }
 
@@ -79,46 +96,68 @@ namespace Demon
             if (!worker.CancellationPending)
             {
                 this.Enabled = true;
+                label5.Text = getCellHash().ToString();
             }
         }
 
 
 
 
-        public void generateSquares()
+        private void generateSquares()
         {
-            Random r = new Random(seed);
-
+            //find out color here and use that as pallette
+            Random rand = new Random(seed);
             for (int row = 0; row < ROWS; row++)
             {
                 //get y coordinate of row
-                int y = row * SQUARE_SIDE + panel1.Top;
+                int y = row * SQUARE_SIDE;
                 for (int col = 0; col < COLUMNS; col++)
                 {
+                    int state = rand.Next(MAX_STATES);
                     //get x coordinate of column
-                    int x = col * SQUARE_SIDE + panel1.Left;
-                    cellMatrix.getCells[row][col] = new Cell(new Point(x, y), new Size(SQUARE_SIDE, SQUARE_SIDE));
-                    cellMatrix.getCells[row][col].setStateRandomly(r.Next(0, 8));
+                    int x = col * SQUARE_SIDE;
+                    Rectangle r = new Rectangle(new Point(x, y),
+                        new Size(SQUARE_SIDE, SQUARE_SIDE));
+                    rectangles[row, col] = r;
+                    patternGenerator.getCells[row, col].setRectangle(r);
+                    patternGenerator.getCells[row,col].setStateRandomly(state);
+                    patternGenerator.getNextGeneration[row, col].setRectangle(r);
+                    patternGenerator.getNextGeneration[row, col].setStateRandomly(state);
                 }
             }
-            label5.Text = cellMatrix.GetCellHash().ToString();
+            string hash = getCellHash().ToString();
+            label5.Text = hash;
         }
+
+
+        private uint getCellHash()
+        {
+            int state, hash = 0;
+            for(int column = 0; column < COLUMNS; column++)
+            {
+                for(int row = 0; row < ROWS; row++)
+                {
+                    state = (int)patternGenerator.getCells[row,column].getCurrentState;
+                    hash ^= ((row * column + 1) * (state + 1));
+                }
+            }
+            return (uint)hash;
+        }
+
+
+
+
 
         private void paintBitmapBuffer()
         {
-            // clear the buffer of previous squares
-            // using panel1 background color
-            bufferGraphics.Clear(panel1.BackColor);
-
-            // draw squares to buffer via its graphic drawing object
             for (int row = 0; row < ROWS; row++)
             {
                 for (int col = 0; col < COLUMNS; col++)
                 {
-                    Cell rect = cellMatrix.getCells[row][col];
-                    string colorName = rect.getCurrentState.ToString();
-                    Color color = Color.FromName(colorName);
-                    bufferGraphics.FillRectangle(new SolidBrush(color), cellMatrix.getCells[row][col].rectangle);
+                    Rectangle rect = patternGenerator.getCells[row, col].rectangle;
+                    int state =(int) patternGenerator.getCells[row,col].getCurrentState;
+                    Color color = palette[state];
+                    bufferGraphics.FillRectangle(new SolidBrush(color), rect);
                 }
             }
         }
@@ -126,18 +165,12 @@ namespace Demon
 
         private void createGraphicResourses()
         {
-            //initialises the graphics resources
             if (panelGraphics != null) panelGraphics.Dispose();
             if (bufferGraphics != null) bufferGraphics.Dispose();
             if (buffer != null) buffer.Dispose();
 
-            // the graphics object allows you to draw to 
-            // something (such as a panel or bitmap)
-            // panelGraphics sets you up to draw to panel1
             panelGraphics = panel1.CreateGraphics();
 
-            // set up background bitmap
-            // and associated graphics drawing object
             buffer = new Bitmap(panel1.Width, panel1.Height);
             bufferGraphics = Graphics.FromImage(buffer);
         }
@@ -164,7 +197,7 @@ namespace Demon
         {
             //main form
         }
-        
+
         private void label1_Click(object sender, EventArgs e)
         {
             //seed label
@@ -202,8 +235,6 @@ namespace Demon
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            //rules combo box
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -211,7 +242,8 @@ namespace Demon
             //reset button
             if (!int.TryParse(textBox1.Text, out seed))
             {
-                MessageBox.Show("Seed is not an integer");
+                MessageBox.Show(" Reset failed with the following error " +
+                    "\n" + "Invalid seed value");
             }
             else
             {
@@ -228,37 +260,71 @@ namespace Demon
         private void button2_Click(object sender, EventArgs e)
         {
             int generation;
-            string rule, color;
+            string color;
             rule = comboBox1.Text;
             color = comboBox2.Text;
-            if (isInvalidNumber(textBox2.Text, out generation))
+            if (isInvalidNumber(textBox2.Text, out generation) || generation < 1)
             {
-                MessageBox.Show(" Generation is not a positive integer or a number greater than or equal to 1");
+                MessageBox.Show(" Unable to start Demon with the following error " +
+                    "\n" + "Generations to run must be greater than 0" );
             }
             else
             {
-                //set the patternGenerator rule and color
-                //start generation
                 if (buffer.Width != this.Width || buffer.Height != this.Height)
                 {
-                    // in case the  cuserhanged the form size while last running
                     createGraphicResourses();
                 }
                 this.Enabled = false;
-                //pass gens as argument
                 worker.RunWorkerAsync(generation);
             }
         }
 
         private bool isInvalidNumber(string line, out int number)
         {
-            return !Int32.TryParse(line, out number) || number < 1;
+            return !Int32.TryParse(line, out number);
         }
 
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //colors combo box
+            String color = comboBox2.Text;
+            String rainbow  = colors[(int)Numbers.zero];
+            String black_white = colors[(int)Numbers.one];
+            String aztec = colors[(int)Numbers.two];
+            String caramel = colors[(int)Numbers.three];
+            if (color.Equals(rainbow))
+            {
+                //set rainbow color
+                palette = new Color[MAX_STATES]{Color.Red,Color.Green,Color.Blue,
+                    Color.LightGreen,Color.DarkGreen,Color.Orange,Color.Purple,Color.Yellow};
+            }
+            else if (color.Equals(black_white))
+            {
+                //set black/white scheme
+                palette = new Color[MAX_STATES]{Color.White,Color.Black,Color.White,
+                    Color.Black,Color.White,Color.Black,Color.White,Color.Black};
+            }
+            else if (color.Equals(aztec))
+            {
+                //set aztec
+                palette = new Color[MAX_STATES]{Color.Orange,Color.Aqua,Color.Purple,
+                    Color.Pink,Color.Orange,Color.Aqua,Color.Purple,Color.Pink};
+            }
+
+            else if (color.Equals(caramel))
+            {
+                //set caramel
+                palette = new Color[MAX_STATES]{Color.Black,Color.Yellow,Color.Orange,
+                    Color.Gold,Color.Black,Color.Yellow,Color.Orange,Color.Gold};
+            }
+
+
+            if (bufferGraphics != null)
+            {
+                paintBitmapBuffer();
+                panelGraphics.DrawImageUnscaled(buffer, 0, 0);
+            }
+
         }
 
         private void label5_Click(object sender, EventArgs e)
@@ -272,6 +338,5 @@ namespace Demon
             //generations label
 
         }
-
     }
 }

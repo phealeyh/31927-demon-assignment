@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,10 +13,9 @@ namespace Demon
         [STAThread]
         static void Main()
         {
-            Form1 myForm;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(myForm = new Form1());
+            Application.Run(new Form1());
         }
     }
 }
