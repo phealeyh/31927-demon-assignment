@@ -40,6 +40,8 @@
             this.resetButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.generationCountLabel = new System.Windows.Forms.Label();
+            this.hashLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // seedLabel
@@ -101,10 +103,22 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
+            // generationCountLabel
+            // 
+            resources.ApplyResources(this.generationCountLabel, "generationCountLabel");
+            this.generationCountLabel.Name = "generationCountLabel";
+            // 
+            // hashLabel
+            // 
+            resources.ApplyResources(this.hashLabel, "hashLabel");
+            this.hashLabel.Name = "hashLabel";
+            // 
             // demonPanel
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.hashLabel);
+            this.Controls.Add(this.generationCountLabel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.resetButton);
@@ -135,6 +149,8 @@
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label generationCountLabel;
+        private System.Windows.Forms.Label hashLabel;
     }
 }
 
