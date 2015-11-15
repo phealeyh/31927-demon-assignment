@@ -34,12 +34,12 @@
             this.rulesLabel = new System.Windows.Forms.Label();
             this.colorLabel = new System.Windows.Forms.Label();
             this.seedTextBox = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.generationTextBox = new System.Windows.Forms.TextBox();
             this.rulesCombo = new System.Windows.Forms.ComboBox();
             this.colorCombo = new System.Windows.Forms.ComboBox();
             this.resetButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.demonPanel1 = new System.Windows.Forms.Panel();
             this.generationCountLabel = new System.Windows.Forms.Label();
             this.hashLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -68,11 +68,13 @@
             // 
             resources.ApplyResources(this.seedTextBox, "seedTextBox");
             this.seedTextBox.Name = "seedTextBox";
+            this.seedTextBox.TextChanged += new System.EventHandler(this.seedTextBox_TextChanged);
             // 
-            // textBox1
+            // generationTextBox
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
+            resources.ApplyResources(this.generationTextBox, "generationTextBox");
+            this.generationTextBox.Name = "generationTextBox";
+            this.generationTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // rulesCombo
             // 
@@ -98,10 +100,10 @@
             this.startButton.Name = "startButton";
             this.startButton.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // demonPanel1
             // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
+            resources.ApplyResources(this.demonPanel1, "demonPanel1");
+            this.demonPanel1.Name = "demonPanel1";
             // 
             // generationCountLabel
             // 
@@ -119,12 +121,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.hashLabel);
             this.Controls.Add(this.generationCountLabel);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.demonPanel1);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.colorCombo);
             this.Controls.Add(this.rulesCombo);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.generationTextBox);
             this.Controls.Add(this.seedTextBox);
             this.Controls.Add(this.colorLabel);
             this.Controls.Add(this.rulesLabel);
@@ -143,12 +145,12 @@
         private System.Windows.Forms.Label rulesLabel;
         private System.Windows.Forms.Label colorLabel;
         private System.Windows.Forms.TextBox seedTextBox;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox generationTextBox;
         private System.Windows.Forms.ComboBox rulesCombo;
         private System.Windows.Forms.ComboBox colorCombo;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel demonPanel1;
         private System.Windows.Forms.Label generationCountLabel;
         private System.Windows.Forms.Label hashLabel;
     }
