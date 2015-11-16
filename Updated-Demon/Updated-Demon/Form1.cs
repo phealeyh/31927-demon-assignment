@@ -32,6 +32,8 @@ namespace Updated_Demon
 
             demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE, demonPanel1);
             SetUpThreading();
+            seedTextBox.Text = "0";
+            generationTextBox.Text = "100";
             AddItemsToColorsCombo();
             AddItemsToRulesCombo();
             //set initial seed rectangle state to 0
@@ -46,15 +48,18 @@ namespace Updated_Demon
             {
                 colorCombo.Items.Add(ie.Current.ToString());
             }
+            colorCombo.SelectedIndex = 0;
         }
 
         private void AddItemsToRulesCombo()
         {
             RulesList rules = new RulesList();
-            foreach(string rule in rules)
+            foreach(string rule in rules.GetColors())
             {
                 rulesCombo.Items.Add(rule);
             }
+            rulesCombo.SelectedIndex = 0;
+
         }
 
         private void SetUpThreading()

@@ -11,14 +11,19 @@ namespace Updated_Demon
         string[] rules = { "Orthogonal", "Diagonal",
             "Alternating"};
 
-        public IEnumerator<string> GetEnumerator()
+        public IEnumerable<string> GetColors()
         {
-           for(int i = 0; i < rules.Length; i++)
+            for (int i = 0; i < rules.Length; i++)
             {
                 yield return rules[i];
             }
         }
 
+        public string[] Rules
+        {
+            get { return rules; }
+            set { rules = value; }
+        }
 
     }
 }
