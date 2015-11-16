@@ -101,6 +101,7 @@
             resources.ApplyResources(this.startButton, "startButton");
             this.startButton.Name = "startButton";
             this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
             // demonPanel1
             // 

@@ -9,3 +9,10 @@ c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\De
 c:\users\11723222\documents\visual studio 2013\Projects\Demon\Demon\obj\Debug\Demon.pdb
 Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\bin\Debug\Demon.exe.config
 Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.pdb
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\bin\Debug\Demon.exe
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\bin\Debug\Demon.pdb
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.csprojResolveAssemblyReference.cache
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.Form1.resources
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.Properties.Resources.resources
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.csproj.GenerateResource.Cache
+Z:\Dropbox\Programming\University work 2015\Second Semester\C-sharp development\31927-demon-assignment\Demon\Demon\obj\Debug\Demon.exe

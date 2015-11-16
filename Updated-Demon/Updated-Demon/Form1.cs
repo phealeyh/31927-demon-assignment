@@ -18,7 +18,7 @@ namespace Updated_Demon
         const int SQUARE_SIDE = 2;
         const int ROWS = 240;
         const int COLUMNS = 320;
-        const int DEFAULT_SEED = 0;
+        const int DEFAULT_SEED = 0, DEFAULT_GENERATION = 100;
         int seed;
 
         public demonPanel()
@@ -32,10 +32,12 @@ namespace Updated_Demon
 
             demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE, demonPanel1);
             SetUpThreading();
-            seedTextBox.Text = "0";
-            generationTextBox.Text = "100";
             AddItemsToColorsCombo();
             AddItemsToRulesCombo();
+            colorCombo.SelectedIndex = 0;
+            rulesCombo.SelectedIndex = 0;
+            seedTextBox.Text = DEFAULT_SEED.ToString();
+            generationTextBox.Text = DEFAULT_GENERATION.ToString();
             //set initial seed rectangle state to 0
             demon.Reset(DEFAULT_SEED);
             hashLabel.Text = demon.GetHash().ToString();
@@ -48,7 +50,6 @@ namespace Updated_Demon
             {
                 colorCombo.Items.Add(ie.Current.ToString());
             }
-            colorCombo.SelectedIndex = 0;
         }
 
         private void AddItemsToRulesCombo()
@@ -58,7 +59,6 @@ namespace Updated_Demon
             {
                 rulesCombo.Items.Add(rule);
             }
-            rulesCombo.SelectedIndex = 0;
 
         }
 
@@ -115,7 +115,7 @@ namespace Updated_Demon
 
         private void seedTextBox_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void generationTextBox_TextChanged(object sender, EventArgs e)
@@ -143,6 +143,28 @@ namespace Updated_Demon
             }
         }
 
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            int generation;
+            string color, rule;
+            rule = rulesCombo.Text;
+            color = colorCombo.Text;
+            if (isInvalidNumber(generationTextBox.Text, out generation) || generation < 1)
+            {
+                MessageBox.Show(" Unable to start Demon with the following error " +
+                    "\n" + "Generations to run must be greater than 0");
+            }
+            else
+            {
+                //run the generations
+                this.Enabled = false;
+                worker.RunWorkerAsync(generation);
+            }
+        }
+        private bool isInvalidNumber(string line, out int number)
+        {
+            return !Int32.TryParse(line, out number);
+        }
         private void rulesCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
