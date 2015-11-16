@@ -12,20 +12,25 @@ namespace Updated_Demon
 {
     public partial class demonPanel : Form
     {
-        Bitmap buffer = null;
-        Graphics panelGraphics = null;
-        Graphics bufferGraphics = null;
         Demon demon = null;
         BackgroundWorker worker;
         const int SQUARE_SIDE = 2;
         const int ROWS = 240;
         const int COLUMNS = 320;
+        const int DEFAULT_SEED = 0;
 
         public demonPanel()
         {
+
             InitializeComponent();
-            demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE,demonPanel1);
+            int panelWidthOut = demonPanel1.Width - (COLUMNS * SQUARE_SIDE);
+            int panelHeightOut = demonPanel1.Height - (ROWS * SQUARE_SIDE);
+            this.Width -= panelWidthOut;
+            this.Height -= panelHeightOut;
+
+            demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE, demonPanel1);
             setUpThreading();
+            //set initial seed rectangle state to 0
         }
 
         private void setUpThreading()
@@ -84,9 +89,14 @@ namespace Updated_Demon
 
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void generationTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void demonPanel1_Paint(object sender, PaintEventArgs e)
+        {
+            demon.Reset(DEFAULT_SEED);
         }
     }
 }

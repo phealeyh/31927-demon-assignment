@@ -74,7 +74,7 @@
             // 
             resources.ApplyResources(this.generationTextBox, "generationTextBox");
             this.generationTextBox.Name = "generationTextBox";
-            this.generationTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.generationTextBox.TextChanged += new System.EventHandler(this.generationTextBox_TextChanged);
             // 
             // rulesCombo
             // 
@@ -104,6 +104,7 @@
             // 
             resources.ApplyResources(this.demonPanel1, "demonPanel1");
             this.demonPanel1.Name = "demonPanel1";
+            this.demonPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.demonPanel1_Paint);
             // 
             // generationCountLabel
             // 

@@ -12,12 +12,14 @@ namespace Updated_Demon
         public const int NUM_STATE = 8;
 
         int state;
-
+        int row, column;
         Rectangle rectangle;
 
 
-        public Cell()
+        public Cell(int row, int column)
         {
+            this.row = row;
+            this.column = column;
             state = 0;
         }
 
@@ -30,6 +32,18 @@ namespace Updated_Demon
         {
             get { return state; }
             set { state = value; }
+        }
+
+        public int Column
+        {
+            get { return column; }
+            set { column = value; }
+        }
+
+        public int Row
+        {
+            get { return row; }
+            set { row = value; }
         }
 
         public Rectangle Rectangle

@@ -15,13 +15,13 @@ namespace Updated_Demon
     //implements the ienumerable so that it can loop over
     //each element
     #endregion
-    class Demon : IEnumerator
+    class Demon 
     {
 
         Bitmap buffer;
         Graphics bufferGraphics, displayGraphics;
         Cell[,] currentMatrix, nextMatrix;
-        int rows, columns, cellSide;
+        int numGen, rows, columns, cellSide;
         Panel displayPanel;
         bool updatingBitmap = false;
 
@@ -34,8 +34,32 @@ namespace Updated_Demon
             {
                 for (int col = 0; col < columns; col++)
                 {
-                    currentMatrix[row, col] = new Cell();
-                    nextMatrix[row, col] = new Cell();
+                    currentMatrix[row, col] = new Cell(row, col);
+                    nextMatrix[row, col] = new Cell(row,col);
+                }
+            }
+        }
+
+
+
+        private IEnumerator<Cell> GetCurrentMatrixIterator()
+        {
+            for (int row = 0; row < rows; row++)
+            {
+                for(int col = 0; col < columns; col++)
+                {
+                    yield return currentMatrix[row, col];
+                }
+            }
+        }
+
+        private IEnumerator<Cell> GetNextMatrixIterator()
+        {
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < columns; col++)
+                {
+                    yield return nextMatrix[row, col];
                 }
             }
         }
@@ -52,7 +76,7 @@ namespace Updated_Demon
 
                 // use clear to draw all rectangles with state 0
                 // faster than drawing all the separate rectangles with fillRectangles
-                bufferGraphics.Clear(colors[0]);
+                //bufferGraphics.Clear(Color.White);
 
                 DrawReactanglesToBitmap();
 
@@ -61,71 +85,36 @@ namespace Updated_Demon
         }
 
 
-
         private void BuildRectanglesToDraw()
         {
             // use the FillRectangles. 
             // makes drawing demon about twice as fast as using fillRectangle method
-            for (int row = 0; row < rows; row++)
+            foreach(Cell cell in currentMatrix)
             {
-                BuildRowRectanglesToDraw(row);
+                cell.Rectangle = new Rectangle(cell.Column * cellSide, cell.Row * cellSide, 
+                    cellSide, cellSide);
             }
         }
-        private void BuildRowRectanglesToDraw(int row)
-        {
-            // a row is often made up of sections of cells with the same state
-            // it is faster to draw this as one rectangle than multiple smaller rectangles
-            // seems to work very well for alternating rule
 
-            int state, col, end, y, width;
-            
-            y = row * cellSide;
-            for (col = 0; col < columns;)
-            {
-                state = currentMatrix[row, col].State;
-
-                // find section to draw
-                end = col + 1;
-                while (end < columns && currentMatrix[row, end].State == state) end++;
-
-                // create rectangle for section
-                if (state != 0)
-                {
-                    // don't worry about state 0. will handle this a different way
-                    width = (end - col) * cellSide;
-                    currentMatrix[state].Rectangle = new Rectangle(col * cellSide, y, width, cellSide);
-                }
-
-                col = end;
-            }
-        }
 
         private void DrawReactanglesToBitmap()
         {
+            List<Rectangle> rectangles = new List<Rectangle>();
             // draw all the lists of rectangles to bitmap using fillRectangles method
-            for (int state = 1; state < Cell.NUM_STATE; state++)
+            foreach (Cell cell in currentMatrix)
             {
-                if (stateRect[state].Count > 0)
-                {
-                    //bufferGraphics.FillRectangles(brushes[state], stateRect[state].ToArray());
-                    stateRect[state].Clear();
-                }
+                rectangles.Add(cell.Rectangle);
             }
+            bufferGraphics.FillRectangles(new SolidBrush(Color.Yellow), rectangles.ToArray());
         }
 
 
         private void RandomiseCells(int seed)
         {
             Random rnd = new Random(seed);
-            int row, col;
-
-            for (row = 0; row < rows; row++)
+            foreach (Cell cell in currentMatrix)
             {
-                for (col = 0; col < columns; col++)
-                {
-                    // set new cell state to random state
-                    currentMatrix[row, col].State = rnd.Next(Cell.NUM_STATE);
-                }
+                cell.State = rnd.Next(Cell.NUM_STATE);
             }
         }
         #endregion
@@ -135,31 +124,33 @@ namespace Updated_Demon
             this.rows = rows;
             this.columns = columns;
             this.cellSide = cellSide;
-            displayPanel = panel;
             // create buffer resources
             buffer = new Bitmap(columns * cellSide, rows * cellSide);
+            //buffer = new Bitmap(panel.Width, panel.Height);
             bufferGraphics = Graphics.FromImage(buffer);
+            displayPanel = panel;
+            displayGraphics = displayPanel.CreateGraphics();
+
             CreateCells();
         }
 
-        public object Current
+        public void Reset(int seed)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            numGen = 0;
+            RandomiseCells(seed);
+            DrawDemon();
+            DisplayDemon();
         }
 
-        public bool MoveNext()
+
+
+
+        public void RunGeneration()
         {
-            throw new NotImplementedException();
+            DrawDemon();
         }
 
-        public void Reset()
-        {
-            throw new NotImplementedException();
-        }
-
+        
 
         public void DisplayDemon()
         {
@@ -171,24 +162,6 @@ namespace Updated_Demon
             }
         }
 
-        public void RunGeneration()
-        {
-            if (demonRules == rules.orthoganol)
-            {
-                ApplyOrthogonalRules();
-            }
-            else if (demonRules == rules.diagonal)
-            {
-                ApplyDiagonalRules();
-            }
-            else
-            {
-                ApplyOrthogonalRules();
-                ApplyDiagonalRules();
-            }
-            DrawDemon();
-            numGen++;
-        }
         #endregion public metohds
     }
 
