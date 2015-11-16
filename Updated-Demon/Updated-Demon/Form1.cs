@@ -18,6 +18,7 @@ namespace Updated_Demon
         const int ROWS = 240;
         const int COLUMNS = 320;
         const int DEFAULT_SEED = 0;
+        int seed;
 
         public demonPanel()
         {
@@ -31,6 +32,8 @@ namespace Updated_Demon
             demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE, demonPanel1);
             setUpThreading();
             //set initial seed rectangle state to 0
+            demon.Reset(DEFAULT_SEED);
+            hashLabel.Text = demon.GetHash().ToString();
         }
 
         private void setUpThreading()
@@ -96,7 +99,22 @@ namespace Updated_Demon
 
         private void demonPanel1_Paint(object sender, PaintEventArgs e)
         {
-            demon.Reset(DEFAULT_SEED);
+            demon.DisplayDemon();
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(seedTextBox.Text, out seed))
+            {
+                MessageBox.Show(" Reset failed with the following error " +
+                    "\n" + "Invalid seed value");
+            }
+            else
+            {
+                demon.Reset(seed);
+                demon.DisplayDemon();
+                hashLabel.Text = demon.GetHash().ToString();
+            }
         }
     }
 }

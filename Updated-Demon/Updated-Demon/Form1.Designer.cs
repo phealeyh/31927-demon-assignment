@@ -93,6 +93,7 @@
             resources.ApplyResources(this.resetButton, "resetButton");
             this.resetButton.Name = "resetButton";
             this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // startButton
             // 

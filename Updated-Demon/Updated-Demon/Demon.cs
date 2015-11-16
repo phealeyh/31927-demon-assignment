@@ -138,7 +138,7 @@ namespace Updated_Demon
 
         public void Reset(int seed)
         {
-            numGen = 0;
+            numGen = seed;
             RandomiseCells(seed);
             DrawDemon();
             DisplayDemon();
@@ -162,6 +162,18 @@ namespace Updated_Demon
                 // only do this if we aren't updating the bitmap
                 displayGraphics.DrawImageUnscaled(buffer, 0, 0);
             }
+        }
+
+        public uint GetHash()
+        {
+            int state, hash = 0;
+
+            foreach(Cell cell in currentMatrix)
+            {
+                state = cell.State;
+                hash ^= ((1 + cell.Row * cell.Column) * (state + 1));
+            }
+            return (uint)hash;
         }
 
         #endregion public metohds
