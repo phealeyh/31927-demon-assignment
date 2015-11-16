@@ -81,6 +81,7 @@
             this.rulesCombo.FormattingEnabled = true;
             resources.ApplyResources(this.rulesCombo, "rulesCombo");
             this.rulesCombo.Name = "rulesCombo";
+            this.rulesCombo.SelectedIndexChanged += new System.EventHandler(this.rulesCombo_SelectedIndexChanged);
             // 
             // colorCombo
             // 

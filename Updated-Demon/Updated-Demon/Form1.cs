@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -30,13 +31,33 @@ namespace Updated_Demon
             this.Height -= panelHeightOut;
 
             demon = new Demon(ROWS,COLUMNS,SQUARE_SIDE, demonPanel1);
-            setUpThreading();
+            SetUpThreading();
+            AddItemsToColorsCombo();
+            AddItemsToRulesCombo();
             //set initial seed rectangle state to 0
             demon.Reset(DEFAULT_SEED);
             hashLabel.Text = demon.GetHash().ToString();
         }
 
-        private void setUpThreading()
+        private void AddItemsToColorsCombo()
+        {
+            IEnumerator ie = Colors.GetColorsEnumerator();
+            while (ie.MoveNext())
+            {
+                colorCombo.Items.Add(ie.Current.ToString());
+            }
+        }
+
+        private void AddItemsToRulesCombo()
+        {
+            RulesList rules = new RulesList();
+            foreach(string rule in rules)
+            {
+                rulesCombo.Items.Add(rule);
+            }
+        }
+
+        private void SetUpThreading()
         {
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -115,6 +136,11 @@ namespace Updated_Demon
                 demon.DisplayDemon();
                 hashLabel.Text = demon.GetHash().ToString();
             }
+        }
+
+        private void rulesCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
