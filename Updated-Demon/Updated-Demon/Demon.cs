@@ -100,7 +100,9 @@ namespace Updated_Demon
         private void DrawReactanglesToBitmap()
         {
             List<Rectangle> rectangles = new List<Rectangle>();
-            // draw all the lists of rectangles to bitmap using fillRectangles method
+            //Use a map that correlates a color to a certain rectangle
+            //Key: Color / Value: Rectangle
+            HashSet<Cell> cells = new HashSet<Cell>();
             foreach (Cell cell in currentMatrix)
             {
                 rectangles.Add(cell.Rectangle);
