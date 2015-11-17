@@ -83,6 +83,7 @@ namespace Updated_Demon
 
             for (int gen = 0; gen < workerGenCount; gen++)
             {
+                demon.Count(gen);
                 //generate demon and set the rectangle states
                 demon.RunGeneration(rule);
                 bgWorker.ReportProgress(gen);
@@ -97,7 +98,7 @@ namespace Updated_Demon
                 //display the actual 2d matrix
                 demon.DisplayDemon();
                 //update the generation count text
-                //toolStripStatusLabelGens.Text = demon.NumGen.ToString();
+                generationCountLabel.Text = demon.Generation.ToString();
             }
         }
 
@@ -106,8 +107,10 @@ namespace Updated_Demon
             //hasnt been cancelled during the process
             if (!worker.CancellationPending)
             {
+                hashLabel.Text = demon.GetHash().ToString();
                 //activate panel
                 demonPanel1.Enabled = true;
+                this.Enabled = true;
                 //get calculated hash value from the generated cells
             }
         }
@@ -141,6 +144,7 @@ namespace Updated_Demon
             {
                 demon.Reset(seed);
                 demon.DisplayDemon();
+                generationCountLabel.Text = demon.Generation.ToString();
                 hashLabel.Text = demon.GetHash().ToString();
             }
         }

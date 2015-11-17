@@ -25,6 +25,7 @@ namespace Updated_Demon
         Panel displayPanel;
         bool updatingBitmap = false;
         string colorPalette;
+        int generationCount;
 
         #region Private Methods
         private void CreateCells()
@@ -43,14 +44,19 @@ namespace Updated_Demon
 
         private void ApplyOrthogonalRules()
         {
-            foreach(Cell cell in currentMatrix)
+            int[,] tempStates = new int[rows,columns];
+            foreach(Cell cell in nextMatrix)
             {
 
                 int row = cell.Row, column = cell.Column;
                 int nextState = cell.NextState;
-                if(StateExistsOrthogonally(nextState,row,column))
+                if (StateExistsOrthogonally(nextState, row, column))
+                {
                     cell.SetNextState();
+                }
+                tempStates[row, column] = cell.State;
             }
+            CopyOverStates(tempStates);
         }
 
         private bool StateExistsOrthogonally(int nextState, int row, int col)
@@ -68,13 +74,27 @@ namespace Updated_Demon
 
         private void ApplyDiagonalRules()
         {
-            foreach (Cell cell in currentMatrix)
+            int[,] tempStates = new int[rows, columns];
+            foreach (Cell cell in nextMatrix)
             {
-
+            
                 int row = cell.Row, column = cell.Column;
                 int nextState = cell.NextState;
                 if (StateExistsDiagonally(nextState, row, column))
+                {
                     cell.SetNextState();
+                }
+                tempStates[row,column] = cell.State;
+            }
+
+            CopyOverStates(tempStates);
+        }
+
+        private void CopyOverStates(int[,] tempStates)
+        {
+            foreach (Cell cell in currentMatrix)
+            {
+                cell.State = tempStates[cell.Row, cell.Column];
             }
         }
 
@@ -164,9 +184,14 @@ namespace Updated_Demon
         private void RandomiseCells(int seed)
         {
             Random rnd = new Random(seed);
-            foreach (Cell cell in currentMatrix)
+            for(int row = 0; row < rows; row++)
             {
-                cell.State = rnd.Next(Cell.NUM_STATE);
+                for(int column = 0; column < columns; column++)
+                {
+                    int state = rnd.Next(Cell.NUM_STATE);
+                    currentMatrix[row,column].State = state;
+                    nextMatrix[row, column].State = state;
+                }
             }
         }
         #endregion
@@ -187,6 +212,7 @@ namespace Updated_Demon
 
         public void Reset(int seed)
         {
+            generationCount = 0;
             numGen = seed;
             RandomiseCells(seed);
             DrawDemon();
@@ -204,6 +230,11 @@ namespace Updated_Demon
             }
             else if (rule.Equals("Diagonal"))
             {
+                ApplyDiagonalRules();
+            }
+            else //alternating
+            {
+                ApplyOrthogonalRules();
                 ApplyDiagonalRules();
             }
             //check rule and run generation
@@ -235,6 +266,17 @@ namespace Updated_Demon
                 hash ^= ((1 + cell.Row * cell.Column) * (state + 1));
             }
             return (uint)hash;
+        }
+
+        public void Count(int gen)
+        {
+            generationCount++;
+        }
+
+        public int Generation
+        {
+            set { generationCount = value; }
+            get { return generationCount; }
         }
 
         #endregion public metohds
