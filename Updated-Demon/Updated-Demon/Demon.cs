@@ -24,6 +24,7 @@ namespace Updated_Demon
         int numGen, rows, columns, cellSide;
         Panel displayPanel;
         bool updatingBitmap = false;
+        string colorPalette;
 
         #region Private Methods
         private void CreateCells()
@@ -39,6 +40,58 @@ namespace Updated_Demon
                 }
             }
         }
+
+        private void ApplyOrthogonalRules()
+        {
+            foreach(Cell cell in currentMatrix)
+            {
+
+                int row = cell.Row, column = cell.Column;
+                int nextState = cell.NextState;
+                if(StateExistsOrthogonally(nextState,row,column))
+                    cell.SetNextState();
+            }
+        }
+
+        private bool StateExistsOrthogonally(int nextState, int row, int col)
+        {
+            int top = (row + rows - 1) % rows;
+            int bottom = (row + 1) % rows;
+            int left = (col + columns - 1) % columns;
+            int right = (col + 1) % columns;
+
+            return currentMatrix[top,col].State == nextState ||
+                currentMatrix[bottom,col].State == nextState ||
+                currentMatrix[row,left].State == nextState ||
+                currentMatrix[row,right].State == nextState;
+        }
+
+        private void ApplyDiagonalRules()
+        {
+            foreach (Cell cell in currentMatrix)
+            {
+
+                int row = cell.Row, column = cell.Column;
+                int nextState = cell.NextState;
+                if (StateExistsDiagonally(nextState, row, column))
+                    cell.SetNextState();
+            }
+        }
+
+        private bool StateExistsDiagonally(int nextState, int row, int col)
+        {
+            int top = (row + rows - 1) % rows;
+            int bottom = (row + 1) % rows;
+            int left = (col + columns - 1) % columns;
+            int right = (col + 1) % columns;
+            return currentMatrix[top, right].State == nextState ||
+                currentMatrix[bottom, right].State == nextState ||
+                currentMatrix[bottom, left].State == nextState ||
+                currentMatrix[top, left].State == nextState;
+        }
+
+
+
 
 
 
@@ -99,15 +152,12 @@ namespace Updated_Demon
 
         private void DrawReactanglesToBitmap()
         {
-            List<Rectangle> rectangles = new List<Rectangle>();
-            //Use a map that correlates a color to a certain rectangle
-            //Key: Color / Value: Rectangle
-            HashSet<Cell> cells = new HashSet<Cell>();
+            string[] colorName = Colors.GetSpecifiedPalette(colorPalette);
             foreach (Cell cell in currentMatrix)
             {
-                rectangles.Add(cell.Rectangle);
+                string color = colorName[cell.State];
+                bufferGraphics.FillRectangle(new SolidBrush(Color.FromName(color)), cell.Rectangle);
             }
-            bufferGraphics.FillRectangles(new SolidBrush(Color.Yellow), rectangles.ToArray());
         }
 
 
@@ -128,7 +178,6 @@ namespace Updated_Demon
             this.cellSide = cellSide;
             // create buffer resources
             buffer = new Bitmap(columns * cellSide, rows * cellSide);
-            //buffer = new Bitmap(panel.Width, panel.Height);
             bufferGraphics = Graphics.FromImage(buffer);
             displayPanel = panel;
             displayGraphics = displayPanel.CreateGraphics();
@@ -147,12 +196,24 @@ namespace Updated_Demon
 
 
 
-        public void RunGeneration()
+        public void RunGeneration(string rule)
         {
+            if (rule.Equals("Orthogonal"))
+            {
+                ApplyOrthogonalRules();
+            }
+            else if (rule.Equals("Diagonal"))
+            {
+                ApplyDiagonalRules();
+            }
+            //check rule and run generation
             DrawDemon();
         }
 
-        
+        public void SetPalette(string color)
+        {
+            colorPalette = color;
+        }
 
         public void DisplayDemon()
         {

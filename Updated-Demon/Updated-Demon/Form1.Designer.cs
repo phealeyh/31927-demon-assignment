@@ -88,6 +88,7 @@
             this.colorCombo.FormattingEnabled = true;
             resources.ApplyResources(this.colorCombo, "colorCombo");
             this.colorCombo.Name = "colorCombo";
+            this.colorCombo.SelectedIndexChanged += new System.EventHandler(this.colorCombo_SelectedIndexChanged);
             // 
             // resetButton
             // 

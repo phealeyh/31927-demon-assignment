@@ -23,9 +23,9 @@ namespace Updated_Demon
             state = 0;
         }
 
-        public Cell(int s)
+        public Cell(int state)
         {
-            state = s;
+            this.state = state;
         }
 
         public int State
@@ -60,7 +60,7 @@ namespace Updated_Demon
         }
 
 
-        public void MakeNextState()
+        public void SetNextState()
         {
             state = NextState;
         }

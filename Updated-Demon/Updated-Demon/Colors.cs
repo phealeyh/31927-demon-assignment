@@ -32,6 +32,33 @@ namespace Updated_Demon
             set { colors = value; }
         }
 
+        static public string[] RainbowColors
+        {
+            get { return rainbowColors; }
+            set { rainbowColors = value; }
+        }
+
+        static public string[] BlackWhiteColors
+        {
+            get { return blackWhiteColors; }
+            set { blackWhiteColors = value; }
+        }
+
+        static public string[] GetSpecifiedPalette(string palette)
+        {
+            if (palette.Equals("Rainbow"))
+            {
+                return rainbowColors;
+            }
+            else if (palette.Equals("Black-White"))
+            {
+                return blackWhiteColors;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }

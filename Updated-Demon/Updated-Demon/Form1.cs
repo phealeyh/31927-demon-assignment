@@ -19,7 +19,7 @@ namespace Updated_Demon
         const int ROWS = 240;
         const int COLUMNS = 320;
         const int DEFAULT_SEED = 0, DEFAULT_GENERATION = 100;
-        int seed;
+        string rule;
 
         public demonPanel()
         {
@@ -38,6 +38,7 @@ namespace Updated_Demon
             rulesCombo.SelectedIndex = 0;
             seedTextBox.Text = DEFAULT_SEED.ToString();
             generationTextBox.Text = DEFAULT_GENERATION.ToString();
+            demon.SetPalette(colorCombo.Text);
             //set initial seed rectangle state to 0
             demon.Reset(DEFAULT_SEED);
             hashLabel.Text = demon.GetHash().ToString();
@@ -83,7 +84,7 @@ namespace Updated_Demon
             for (int gen = 0; gen < workerGenCount; gen++)
             {
                 //generate demon and set the rectangle states
-                demon.RunGeneration();
+                demon.RunGeneration(rule);
                 bgWorker.ReportProgress(gen);
             }
         }
@@ -130,6 +131,7 @@ namespace Updated_Demon
 
         private void resetButton_Click(object sender, EventArgs e)
         {
+            int seed;
             if (!int.TryParse(seedTextBox.Text, out seed))
             {
                 MessageBox.Show(" Reset failed with the following error " +
@@ -146,7 +148,7 @@ namespace Updated_Demon
         private void startButton_Click(object sender, EventArgs e)
         {
             int generation;
-            string color, rule;
+            string color;
             rule = rulesCombo.Text;
             color = colorCombo.Text;
             if (isInvalidNumber(generationTextBox.Text, out generation) || generation < 1)
@@ -161,6 +163,12 @@ namespace Updated_Demon
                 worker.RunWorkerAsync(generation);
             }
         }
+
+        private void colorCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private bool isInvalidNumber(string line, out int number)
         {
             return !Int32.TryParse(line, out number);
